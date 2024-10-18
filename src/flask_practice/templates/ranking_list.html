@@ -1,0 +1,13 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>商品一覧</h2>
+    <ul>
+        {% for ranking in rankings %}
+            <li>商品名: {{ ranking.item_name }} 順位: {{ ranking.place }} 画像: {{ ranking.item_image }} </li>
+            <img src="{{ ranking.item_image }}" alt="Image from external source">
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}
