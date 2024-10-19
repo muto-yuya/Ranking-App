@@ -12,6 +12,7 @@ class Ranking(db.Model):
     id = db.Column(db.Integer, primary_key=True)  # system use
     item_name = db.Column(db.String(255))  # product name
     place = db.Column(db.Integer)  # place in the ranking category
+    price = db.Column(db.Integer)
     ranking_category = db.Column(db.String(255))  # ranking category ex. mcdonalds
     item_image = db.Column(db.String(2048))  # ranking category ex. mcdonalds
     created_at = db.Column(
