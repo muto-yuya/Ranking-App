@@ -1,13 +1,78 @@
 {% extends "layout.html" %}
 
 {% block content %}
-<div class="container mt-4">
-    <h2>商品一覧</h2>
-    <ul>
-        {% for ranking in rankings %}
-            <li>商品名: {{ ranking.item_name }} 順位: {{ ranking.place }} 画像: {{ ranking.item_image }} </li>
-            <img src="{{ ranking.item_image }}" alt="Image from external source">
-        {% endfor %}
-    </ul>
+<div class="container">
+    <h2>帰れま10 くら寿司</h2>
+    <div class="container text-center">
+        <div class="row row-cols-4">
+            {% for item in items %}
+            <button class="col border show_modal">
+                <img class="item_image" src="{{ item.item_image}}" alt="" height=100 width=100>
+                <p>{{ item.item_name }}</p>
+                <p class="item_place" hidden>{{ item.place }}</p>
+            </button>
+            {% endfor %}
+        </div>
+    </div>
 </div>
+
+<!-- ボタン・リンククリック後に表示される画面の内容 -->
+<div class="modal fade" id="placecConfirmModal" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4>順位表示確認</h4>
+            </div>
+            <div class="modal-body">
+                <label>順位を表示しますか？</label>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="placecConfirmModalClose" class="btn btn-default" data-dismiss="modal">閉じる</button>
+                <button type="button" id="placecConfirmModalShow" class="btn btn-danger">表示</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="placecShowModal" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4>順位表示</h4>
+            </div>
+            <div class="modal-body" id="placecShowModalLabel">
+                <label>何位です</label>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="placecShowModalClose" class="btn btn-default" data-dismiss="modal">閉じる</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        var place
+
+        $('.show_modal').on('click', function() {
+            place = $(this).find('.item_place').text()
+            $('#placecConfirmModal').modal('show')
+        });
+
+        $('#placecConfirmModalClose').on('click', function() {
+            place = null
+            $('#placecConfirmModal').modal('hide')
+        });
+
+        $('#placecConfirmModalShow').on('click', function() {
+            $('#placecConfirmModal').modal('hide')
+            $('#placecShowModal').find("#placecShowModalLabel").text(place+"位です")
+            $('#placecShowModal').modal('show')
+        });
+
+        $('#placecShowModalClose').on('click', function() {
+            $('#placecShowModal').modal('hide')
+        });
+    });
+</script>
 {% endblock %}

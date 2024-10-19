@@ -83,6 +83,7 @@ def add_ranking():
     """Add ranking page for test"""
     if request.method == "GET":
         return render_template("add_ranking.html")
+
     if request.method == "POST":
         form_item_name = request.form.get(STRINGFIELD_ITEM_NAME)  # str
         form_place = request.form.get(STRINGFIELD_PLACE)  # str
@@ -105,7 +106,7 @@ def add_ranking():
 def ranking_list():
     """Show ranking page"""
     items = Ranking.query.all()
-    return render_template("ranking_list.html", rankings=items)
+    return render_template("ranking_list.html", items=items)
 
 
 @app.route("/edit_ranking", methods=["POST", "GET"])
