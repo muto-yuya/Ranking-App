@@ -9,21 +9,21 @@
         <div>
             <table class="table">
                 <tr>
-                    <th> item name </th>
-                    <th> place </th>
-                    <th> price </th>
-                    <th> item image url</th>
-                    <th> item image </th>
-                    <th> delete </th>
+                    <th class="col-4" scope="col"> 商品名 </th>
+                    <th class="col-1" scope="col"> 順位 </th>
+                    <th class="col-1" scope="col"> 価格 </th>
+                    <th class="col-4" scope="col"> 画像URL</th>
+                    <th class="col-1" scope="col"> 画像 </th>
+                    <th class="col-1" scope="col"> 削除 </th>
                 </tr>
                 {% for item in ranking_form.items %}
                 <tr>
-                    <td>{{ wtf.form_field(item.item_name) }}</td>
-                    <td>{{ wtf.form_field(item.place) }}</td>
-                    <td>{{ wtf.form_field(item.price) }}</td>
-                    <td>{{ wtf.form_field(item.item_image, class="item_image_url") }}</td>
-                    <td><img class="item_image img-thumbnail" src="{{ item.item_image.data }}" alt="" border=3 height=50 width=50></img></td>
-                    <td><button class="rowdel btn-danger">Del</button></td>
+                    <td scope="row">{{ wtf.form_field(item.item_name) }}</td>
+                    <td scope="row">{{ wtf.form_field(item.place) }}</td>
+                    <td scope="row">{{ wtf.form_field(item.price) }}</td>
+                    <td scope="row">{{ wtf.form_field(item.item_image, class="item_image_url form-control") }}</td>
+                    <td scope="row"><img class="item_image img-thumbnail" src="{{ item.item_image.data }}" alt="" border=3 height=50 width=50></img></td>
+                    <td scope="row"><button class="rowdel btn-danger">Del</button></td>
                 </tr>
                 {% endfor %}
             </table>
