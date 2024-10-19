@@ -6,7 +6,7 @@
         <h1>Edit Ranking</h1>
         <div>
             <form action="" method="post" name="ranking_form">
-                {{ ranking_form.hidden_tag() }}
+                {{ ranking_form.csrf_token }}
                 Team Title: {{ ranking_form.title }}<br>
                 <div>
                     <table>
@@ -25,12 +25,13 @@
                             <td>{{ item.ranking_category }}</td>
                             <td>{{ item.item_image }}</td>
                             <td><img src="{{ item.item_image.data }}" alt="" border=3 height=50 width=50></img></td>
-                            <td><input type="checkbox" class='toggle' checked data-toggle="toggle"></td>
+                            <td>{{ item.is_deleted() }}</td>
                         </tr>
                         {% endfor %}
                     </table>
                 </div>
-                <p><input type="submit" name="edit" value="Send"></p>
+                <p>{{ ranking_form.submit() }}</p>
+                <p>{{ ranking_form.addline() }}</p>
             </form>
         </div>
     </body>
