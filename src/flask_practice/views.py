@@ -6,6 +6,7 @@ storing flask views
 from flask import redirect, render_template, request, url_for
 from flask_wtf import FlaskForm
 from wtforms import BooleanField, FieldList, FormField, StringField, SubmitField
+from wtforms.validators import InputRequired
 
 from flask_practice import app, db
 from flask_practice.models.ranking import Ranking
@@ -25,8 +26,8 @@ class ItemForm(FlaskForm):
 
         csrf = False
 
-    item_name = StringField(STRINGFIELD_ITEM_NAME)
-    place = StringField(STRINGFIELD_PLACE)
+    item_name = StringField(STRINGFIELD_ITEM_NAME, validators=[InputRequired()])
+    place = StringField(STRINGFIELD_PLACE, validators=[InputRequired()])
     ranking_category = StringField(STRINGFIELD_RANKING_CATEGORY)
     item_image = StringField(STRINGFIELD_ITEM_IMAGE)
     is_deleted = BooleanField(BOOLEANFIELD_IS_DELETED, default="")
@@ -36,9 +37,6 @@ class RankingForm(FlaskForm):
     """ranking list form for edit"""
 
     items = FieldList(FormField(ItemForm, "Item"))
-    """
-    FieldlistとFormFieldを用いて子フォーム複製
-    """
     submit = SubmitField("送信")
     addline = SubmitField("Add new line")
 
@@ -46,13 +44,15 @@ class RankingForm(FlaskForm):
         """Function for adding new row"""
         # read the data in the form
         read_form_data = self.data
-        print(read_form_data)
-        # modify the data as you see fit:
+
+        # updated_list to be seen after reloading
         updated_list = read_form_data["items"]
 
+        # add row if addline buttton clicked
         if read_form_data["addline"]:
             updated_list.append({})
 
+        # update item list removing deleted rows
         if read_form_data["submit"]:
             updated_list_delete_row = updated_list
             updated_list = []
@@ -60,8 +60,8 @@ class RankingForm(FlaskForm):
                 if not item.get(BOOLEANFIELD_IS_DELETED):
                     updated_list.append(item)
 
-        read_form_data["items"] = updated_list
         # reload the form from the modified data
+        read_form_data["items"] = updated_list
         self.__init__(formdata=None, **read_form_data)
         self.validate()
 
@@ -103,29 +103,32 @@ def add_ranking():
 
 @app.route("/rankings")
 def ranking_list():
-    """Show ranking page for test"""
+    """Show ranking page"""
     items = Ranking.query.all()
     return render_template("ranking_list.html", rankings=items)
 
 
 @app.route("/edit_ranking", methods=["POST", "GET"])
 def ranking_edit():
-    """Edit ranking page for test"""
+    """Edit ranking page"""
     items = Ranking.query.all()
     ranking_form = RankingForm(items=items)
 
     if RankingForm().validate_on_submit():
-        ranking_form.update_self()  # This reloads the form with the processed data
-        for item in ranking_form.items:
-            print(item.data)
-            print(item.data[BOOLEANFIELD_IS_DELETED])
+        # This reloads the form with the editted values/added rows/deleted rows
+        ranking_form.update_self()
+
+        # Clear DB
         db.session.query(Ranking).delete()
+
+        # update DB with entered values in ranking form
+        print(ranking_form.data)
         for item in ranking_form.data["items"]:
             ranking = Ranking(
-                item_name=item[STRINGFIELD_ITEM_NAME],
-                place=item[STRINGFIELD_PLACE],
-                ranking_category=item[STRINGFIELD_RANKING_CATEGORY],
-                item_image=item[STRINGFIELD_ITEM_IMAGE],
+                item_name=item.get(STRINGFIELD_ITEM_NAME),
+                place=item.get(STRINGFIELD_PLACE),
+                ranking_category=item.get(STRINGFIELD_RANKING_CATEGORY),
+                item_image=item.get(STRINGFIELD_ITEM_IMAGE),
             )
             db.session.add(ranking)
         db.session.commit()
