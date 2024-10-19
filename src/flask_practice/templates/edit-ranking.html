@@ -1,38 +1,40 @@
-<html>
-    <head>
-        <title>Edit Ranking</title>
-    </head>
-    <body>
-        <h1>Edit Ranking</h1>
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <form action="" method="post" name="ranking_form">
+        {{ ranking_form.csrf_token }}
+        Team Title: {{ ranking_form.title }}<br>
         <div>
-            <form action="" method="post" name="ranking_form">
-                {{ ranking_form.csrf_token }}
-                Team Title: {{ ranking_form.title }}<br>
-                <div>
-                    <table>
-                        <tr>
-                            <th> item name </th>
-                            <th> place </th>
-                            <th> rankng category </th>
-                            <th> item image url</th>
-                            <th> item image </th>
-                            <th> delete </th>
-                        </tr>
-                        {% for item in ranking_form.items %}
-                        <tr>
-                            <td>{{ item.item_name }}</td>
-                            <td>{{ item.place }}</td>
-                            <td>{{ item.ranking_category }}</td>
-                            <td>{{ item.item_image }}</td>
-                            <td><img src="{{ item.item_image.data }}" alt="" border=3 height=50 width=50></img></td>
-                            <td>{{ item.is_deleted() }}</td>
-                        </tr>
-                        {% endfor %}
-                    </table>
-                </div>
-                <p>{{ ranking_form.submit() }}</p>
-                <p>{{ ranking_form.addline() }}</p>
-            </form>
+            <table>
+                <tr>
+                    <th> item name </th>
+                    <th> place </th>
+                    <th> rankng category </th>
+                    <th> item image url</th>
+                    <th> item image </th>
+                    <th> delete </th>
+                </tr>
+                {% for item in ranking_form.items %}
+                <tr>
+                    <td>{{ item.item_name }}</td>
+                    <td>{{ item.place }}</td>
+                    <td>{{ item.ranking_category }}</td>
+                    <td class="item_image_url">{{ item.item_image }}</td>
+                    <td><img class="item_image" src="{{ item.item_image.data }}" alt="" border=3 height=50 width=50></img></td>
+                    <td>{{ item.is_deleted() }}</td>
+                </tr>
+                {% endfor %}
+            </table>
         </div>
-    </body>
-</html>
+        <p>{{ ranking_form.submit() }}</p>
+        <p>{{ ranking_form.addline() }}</p>
+    </form>
+</div>
+<script>
+    $('.item_image_url').change(function(){
+        var item_image_url = $(this).closest('tr').find('input').val();
+        $(this).closest('tr').find('.item_image').attr('src', item_image_url)
+    });
+</script>
+{% endblock %}
