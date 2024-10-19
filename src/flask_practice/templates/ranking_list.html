@@ -6,7 +6,7 @@
     <div class="container text-center">
         <div class="row row-cols-4">
             {% for item in items %}
-            <button class="col border show_modal">
+            <button class="col btn border show_modal">
                 <img class="item_image" src="{{ item.item_image}}" alt="" height=100 width=100>
                 <p>{{ item.item_name }}</p>
                 <p class="item_place" hidden>{{ item.place }}</p>
