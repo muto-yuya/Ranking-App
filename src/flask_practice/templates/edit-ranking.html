@@ -7,7 +7,7 @@
         {{ ranking_form.csrf_token }}
         Team Title: {{ ranking_form.title }}<br>
         <div>
-            <table>
+            <table class="table">
                 <tr>
                     <th> item name </th>
                     <th> place </th>
@@ -18,28 +18,42 @@
                 </tr>
                 {% for item in ranking_form.items %}
                 <tr>
-                    <td>{{ item.item_name }}</td>
-                    <td>{{ item.place }}</td>
-                    <td>{{ item.price }}</td>
-                    <td class="item_image_url">{{ item.item_image }}</td>
-                    <td><img class="item_image" src="{{ item.item_image.data }}" alt="" border=3 height=50 width=50></img></td>
-                    <td><button class="rowdel">Del</button></td>
+                    <td>{{ wtf.form_field(item.item_name) }}</td>
+                    <td>{{ wtf.form_field(item.place) }}</td>
+                    <td>{{ wtf.form_field(item.price) }}</td>
+                    <td>{{ wtf.form_field(item.item_image, class="item_image_url") }}</td>
+                    <td><img class="item_image img-thumbnail" src="{{ item.item_image.data }}" alt="" border=3 height=50 width=50></img></td>
+                    <td><button class="rowdel btn-danger">Del</button></td>
                 </tr>
                 {% endfor %}
             </table>
         </div>
 
-        <input type="button" value="行追加" onClick="addlineform();">
-        <input type="button" value="送信" onClick="submitform();">
+        <p>{{ wtf.form_field(ranking_form.addline, class="btn-primary") }}</p>
+        <p>{{ wtf.form_field(ranking_form.submitform, class="btn-success") }}</p>
+
 
 
 
     </form>
     
 </div>
+
+<style>
+    .control-label {
+        display: none;
+    }
+
+    .help-block {
+        display: none;
+    }
+</style>
+
 <script>
     $('.item_image_url').change(function(){
-        var item_image_url = $(this).closest('tr').find('input').val();
+        console.log("caaled")
+        var item_image_url = $(this).closest('tr').find('.item_image_url').val();
+        console.log(item_image_url)
         $(this).closest('tr').find('.item_image').attr('src', item_image_url)
     });
 
@@ -56,23 +70,5 @@
             }
         });
     });
-
-    function addlineform(){
-        $('<input>').attr({
-            type: 'hidden',
-            name: 'addline',
-            value: true
-        }).appendTo('#myform');
-        $('#myform').submit()
-    }
-
-    function submitform(){
-        $('<input>').attr({
-            type: 'hidden',
-            name: 'submitform',
-            value: true
-        }).appendTo('#myform');
-        $('#myform').submit()
-    }
 </script>
 {% endblock %}

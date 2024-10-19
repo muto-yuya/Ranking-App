@@ -6,7 +6,6 @@ storing flask views
 from flask import redirect, render_template, request, url_for
 from flask_wtf import FlaskForm
 from wtforms import (
-    BooleanField,
     FieldList,
     FormField,
     IntegerField,
@@ -59,14 +58,6 @@ class RankingForm(FlaskForm):
         # add row if addline buttton clicked
         if read_form_data["addline"]:
             updated_list.append({})
-
-        # # update item list removing deleted rows
-        # if read_form_data["submitform"]:
-        #     updated_list_delete_row = updated_list
-        #     updated_list = []
-        #     for item in updated_list_delete_row:
-        #         if not item.get(BOOLEANFIELD_IS_DELETED):
-        #             updated_list.append(item)
 
         # reload the form from the modified data
         read_form_data["items"] = updated_list
@@ -124,8 +115,6 @@ def ranking_edit():
     ranking_form = RankingForm(items=items)
     print("validate_on_submit before")
     print(ranking_form.data)
-
-    # This reloads the form with the editted values/added rows/deleted rows
 
     if ranking_form.data["addline"]:
         ranking_form.update_self()
