@@ -14,7 +14,8 @@ class Ranking(db.Model):
     place = db.Column(db.Integer)  # place in the ranking category
     price = db.Column(db.Integer)
     ranking_category = db.Column(db.String(255))  # ranking category ex. mcdonalds
-    item_image = db.Column(db.String(2048))  # ranking category ex. mcdonalds
+    item_image = db.Column(db.String(2048))  # item image
+    is_opened = db.Column(db.Boolean, default=False, nullable=False)
     created_at = db.Column(
         db.DateTime, nullable=False, default=datetime.now
     )  # 作成日時

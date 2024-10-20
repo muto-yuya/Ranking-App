@@ -4,12 +4,26 @@
 <div class="container">
     <h2>帰れま10 くら寿司</h2>
     <div class="container text-center">
+        
         <div class="row row-cols-4">
+        
             {% for item in items %}
+            {% if item.is_opened %}
+            <button class="col btn border show_modal bg-secondary">
+            {% else %}
             <button class="col btn border show_modal">
+            {% endif %}
                 <img class="item_image" src="{{ item.item_image}}" alt="" height=100 width=100>
                 <p>{{ item.item_name }}</p>
-                <p class="item_place" hidden>{{ item.place }}</p>
+                <p>{{ item.price }}円</p>
+                
+                {% if item.is_opened %}
+                <p class="item_place">順位 {{ item.place }}位</p>
+                {% else %}
+                <p class="item_place">順位 ?位</p>
+                {% endif %}
+                <p class="item_place_store" hidden>{{ item.place }}</p>
+                
             </button>
             {% endfor %}
         </div>
@@ -53,25 +67,34 @@
 <script>
     $(function () {
         var place
+        var item_index
 
         $('.show_modal').on('click', function() {
-            place = $(this).find('.item_place').text()
+            item_index = $(this).index()
             $('#placecConfirmModal').modal('show')
         });
 
         $('#placecConfirmModalClose').on('click', function() {
-            place = null
             $('#placecConfirmModal').modal('hide')
+            item_index = null
         });
 
         $('#placecConfirmModalShow').on('click', function() {
             $('#placecConfirmModal').modal('hide')
+
+            place = $('.item_place_store').eq(item_index).text()
             $('#placecShowModal').find("#placecShowModalLabel").text(place+"位です")
             $('#placecShowModal').modal('show')
+
+            $('.show_modal').eq(item_index).addClass("bg-secondary")
+            $('.show_modal').eq(item_index).find("p.item_place").text("順位"+place+"位")
+            item_index = null
         });
 
         $('#placecShowModalClose').on('click', function() {
             $('#placecShowModal').modal('hide')
+            place = null
+            item_index = null
         });
     });
 </script>

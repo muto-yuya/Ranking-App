@@ -6,6 +6,7 @@ storing flask views
 from flask import redirect, render_template, request, url_for
 from flask_wtf import FlaskForm
 from wtforms import (
+    BooleanField,
     FieldList,
     FormField,
     IntegerField,
@@ -22,6 +23,7 @@ STRINGFIELD_PLACE = "place"
 INTEGERFIELD_PPRICE = "price"
 STRINGFIELD_RANKING_CATEGORY = "ranking_category"
 STRINGFIELD_ITEM_IMAGE = "item_image"
+BOOLEANFIELD_IS_OPENED = "is_opened"
 BOOLEANFIELD_IS_DELETED = "is_deleted"
 
 
@@ -38,6 +40,7 @@ class ItemForm(FlaskForm):
     price = IntegerField(INTEGERFIELD_PPRICE)
     ranking_category = StringField(STRINGFIELD_RANKING_CATEGORY)
     item_image = StringField(STRINGFIELD_ITEM_IMAGE)
+    is_opened = BooleanField(BOOLEANFIELD_IS_OPENED)
 
 
 class RankingForm(FlaskForm):
@@ -105,6 +108,8 @@ def add_ranking():
 def ranking_list():
     """Show ranking page"""
     items = Ranking.query.all()
+    print(items)
+    print(items[0].is_opened)
     return render_template("ranking_list.html", items=items)
 
 
@@ -134,6 +139,7 @@ def ranking_edit():
                 place=item.get(STRINGFIELD_PLACE),
                 ranking_category=item.get(STRINGFIELD_RANKING_CATEGORY),
                 item_image=item.get(STRINGFIELD_ITEM_IMAGE),
+                is_opened=item.get(BOOLEANFIELD_IS_OPENED),
             )
             db.session.add(ranking)
         db.session.commit()
