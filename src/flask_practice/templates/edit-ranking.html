@@ -3,43 +3,44 @@
 
 {% block content %}
 <div class="container mt-4">
+    
     <form id=myform method="post" name="ranking_form">
         {{ ranking_form.csrf_token }}
-        ランキング: {{ ranking_form.title }}<br>
-        <div>
-            <table class="table">
-                <tr>
-                    <th class="col-3" scope="col"> 商品名 </th>
-                    <th class="col-1" scope="col"> 順位 </th>
-                    <th class="col-1" scope="col"> 価格 </th>
-                    <th class="col-4" scope="col"> 画像URL</th>
-                    <th class="col-1" scope="col"> 画像 </th>
-                    <th class="col-1" scope="col"> 公開 </th>
-                    <th class="col-1" scope="col"> 削除 </th>
-                    
-                </tr>
-                {% for item in ranking_form.items %}
-                <tr>
-                    <td scope="row">{{ wtf.form_field(item.item_name) }}</td>
-                    <td scope="row">{{ wtf.form_field(item.place) }}</td>
-                    <td scope="row">{{ wtf.form_field(item.price) }}</td>
-                    <td scope="row">{{ wtf.form_field(item.item_image, class="item_image_url form-control") }}</td>
-                    <td scope="row"><img class="item_image img-thumbnail" src="{{ item.item_image.data }}" alt="" border=3 height=50 width=50></img></td>
-                    <td scope="row">{{ item.is_opened }}</td>
-                    <td scope="row"><button class="rowdel btn-danger">Del</button></td>
-                </tr>
-                {% endfor %}
-            </table>
+        
+        <div class="d-flex justify-content-end">
+            {{ wtf.form_field(ranking_form.submitform, class="btn-success float-end me-1", ) }}
+            <button type="button" class="btn-secondary float-end" onclick="location.href='{{ edit_cancel_url }}';">キャンセル</button>
         </div>
-        <div class="container">
-            <div class="row">
-                <div>{{ wtf.form_field(ranking_form.addline, class="btn-primary") }}</div>
-            </div>
-            <div class="row justify-content-end">
-                <div class="col-1">{{ wtf.form_field(ranking_form.cancelchange, class="btn-secondary") }}</div>
-                <div class="col-1">{{ wtf.form_field(ranking_form.submitform, class="btn-success") }}</div>
-            </div>
+
+        <table class="table">
+            <tr>
+                <th class="col-3" scope="col"> 商品名 </th>
+                <th class="col-1" scope="col"> 順位 </th>
+                <th class="col-1" scope="col"> 価格 </th>
+                <th class="col-4" scope="col"> 画像URL</th>
+                <th class="col-1" scope="col"> 画像 </th>
+                <th class="col-1" scope="col"> 公開 </th>
+                <th class="col-1" scope="col"> 削除 </th>
+                
+            </tr>
+            {% for item in ranking_form.items %}
+            <tr>
+                <td scope="row">{{ wtf.form_field(item.item_name) }}</td>
+                <td scope="row">{{ wtf.form_field(item.place) }}</td>
+                <td scope="row">{{ wtf.form_field(item.price) }}</td>
+                <td scope="row">{{ wtf.form_field(item.item_image, class="item_image_url form-control") }}</td>
+                <td scope="row"><img class="item_image img-thumbnail" src="{{ item.item_image.data }}" alt="" border=3 height=50 width=50></img></td>
+                <td scope="row">{{ item.is_opened }}</td>
+                <td scope="row"><button class="rowdel btn-danger">Del</button></td>
+            </tr>
+            {% endfor %}
+        </table>
+
+        <div>
+            {{ wtf.form_field(ranking_form.addline, class="btn-primary") }}
+        </div>
     </form>
+
     
 </div>
 

@@ -1,0 +1,29 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row align-items-center">
+        <div class="col">
+            <button type="button" class="btn-primary float-end" onclick="location.href='{{ ranking_list_url }}';">戻る</button>
+        </div>
+    </div>
+    
+        <table class="table">
+            <tr>
+                <th class="col-1" scope="col"> 順位 </th>
+                <th class="col-1" scope="col"> 画像 </th>
+                <th class="col-3" scope="col"> 商品名 </th>
+                <th class="col-1" scope="col"> 価格 </th>
+            </tr>
+            {% for item in items %}
+            <tr>
+                <td scope="row">{{ item.place }}</td>
+                <td scope="row"><img class="item_image img-thumbnail" src="{{ item.item_image }}" alt="" border=3 height=50 width=50></img></td>
+                <td scope="row">{{ item.item_name }}</td>
+                <td scope="row">{{ item.price }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+</div>
+{% endblock %}

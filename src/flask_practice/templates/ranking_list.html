@@ -1,12 +1,13 @@
 {% extends "layout.html" %}
 
 {% block content %}
-<div class="container">
-    <h2>帰れま10 くら寿司</h2>
-    <div class="container text-center">
+<div class="container mt-4">
+    <div class="row align-items-center">
+        <div class="col"><h2>帰れま10 くら寿司</h2></div>
+        <div class="col"><button type="button" class="btn-primary float-end" onclick="location.href='{{ ranking_history_url }}';">履歴</button></div>
+    </div>
         
         <div class="row row-cols-4">
-        
             {% for item in items %}
             {% if item.is_opened %}
             <button class="col btn border show_modal bg-secondary">
@@ -15,7 +16,7 @@
             {% endif %}
                 <p class="item_id" hidden>{{ item.id }}</p>
 
-                <img class="item_image" src="{{ item.item_image}}" alt="" height=100 width=100>
+                <img class="item_image" src="{{ item.item_image }}" alt="" height=100 width=100>
                 <p>{{ item.item_name }}</p>
                 <p>{{ item.price }}円</p>
                 

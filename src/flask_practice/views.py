@@ -5,7 +5,6 @@ storing flask views
 
 from flask import redirect, render_template, request, url_for
 from flask_wtf import FlaskForm
-from sqlalchemy import text
 from wtforms import (
     BooleanField,
     FieldList,
@@ -49,7 +48,6 @@ class RankingForm(FlaskForm):
 
     items = FieldList(FormField(ItemForm, "Item"))
     submitform = SubmitField("保存")
-    cancelchange = SubmitField("キャンセル")
     addline = SubmitField("行追加")
 
     def update_self(self):
@@ -112,19 +110,35 @@ def ranking_list():
     items = Ranking.query.all()
     print(items)
     print(items[0].is_opened)
-    return render_template("ranking_list.html", items=items)
+    return render_template(
+        "ranking_list.html",
+        items=items,
+        ranking_history_url=url_for(ranking_history.__name__),
+    )
+
+
+@app.route("/ranking-history")
+def ranking_history():
+    """Show ranking history in the game"""
+    items = Ranking.query.all()
+    items = db.session.query(Ranking).filter(Ranking.is_opened).order_by(Ranking.place)
+    print(items)
+    return render_template(
+        "ranking_history.html",
+        items=items,
+        ranking_list_url=url_for(ranking_list.__name__),
+    )
 
 
 @app.route("/edit_ranking", methods=["POST", "GET"])
 def edit_ranking():
     """Edit ranking page"""
     items = Ranking.query.all()
-    ranking_form = RankingForm(items=items)
+    ranking_form = RankingForm(
+        items=items, edit_cancel_url=url_for(edit_ranking.__name__)
+    )
     print("validate_on_submit before")
     print(ranking_form.data)
-
-    if ranking_form.data["cancelchange"]:
-        return redirect(url_for("edit_ranking"))
 
     if ranking_form.data["addline"]:
         ranking_form.update_self()
@@ -146,7 +160,6 @@ def edit_ranking():
             )
             db.session.add(ranking)
         db.session.commit()
-
     return render_template("edit-ranking.html", ranking_form=ranking_form)
 
 
