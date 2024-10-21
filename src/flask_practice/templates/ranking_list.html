@@ -13,6 +13,8 @@
             {% else %}
             <button class="col btn border show_modal">
             {% endif %}
+                <p class="item_id" hidden>{{ item.id }}</p>
+
                 <img class="item_image" src="{{ item.item_image}}" alt="" height=100 width=100>
                 <p>{{ item.item_name }}</p>
                 <p>{{ item.price }}円</p>
@@ -87,7 +89,18 @@
             $('#placecShowModal').modal('show')
 
             $('.show_modal').eq(item_index).addClass("bg-secondary")
-            $('.show_modal').eq(item_index).find("p.item_place").text("順位"+place+"位")
+            $('.show_modal').eq(item_index).find("p.item_place").text("順位 "+place+"位")
+
+            item_id_to_open = $('.show_modal').eq(item_index).find("p.item_id").text()
+            $.ajax("/update_is_open_ajax", {
+                type: "post",
+                data: {"item_id_to_open": item_id_to_open},
+            }).done(function(received_data) {
+                console.log("Ajax Success");
+            }).fail(function() {
+                console.log("Ajax Failed");
+            });
+            
             item_index = null
         });
 

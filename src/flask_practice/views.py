@@ -5,6 +5,7 @@ storing flask views
 
 from flask import redirect, render_template, request, url_for
 from flask_wtf import FlaskForm
+from sqlalchemy import text
 from wtforms import (
     BooleanField,
     FieldList,
@@ -145,3 +146,20 @@ def ranking_edit():
         db.session.commit()
 
     return render_template("edit-ranking.html", ranking_form=ranking_form)
+
+
+@app.route("/update_is_open_ajax", methods=["POST"])
+def update_is_open_ajax():
+    """Update is open status through Ajax"""
+    message = ""
+    if request.method == "POST":
+        try:
+            item_id_to_open = request.form["item_id_to_open"]
+            item = Ranking.query.get(item_id_to_open)
+            item.is_opened = True
+            db.session.commit()
+            message = "update_is_open_ajax completed"
+        except Exception as e:
+            print(e)
+            message = "update_is_open_ajax failed"
+    return message
