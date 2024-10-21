@@ -48,8 +48,9 @@ class RankingForm(FlaskForm):
     """ranking list form for edit"""
 
     items = FieldList(FormField(ItemForm, "Item"))
-    submitform = SubmitField("送信")
-    addline = SubmitField("Add new line")
+    submitform = SubmitField("保存")
+    cancelchange = SubmitField("キャンセル")
+    addline = SubmitField("行追加")
 
     def update_self(self):
         """Function for adding new row"""
@@ -115,17 +116,18 @@ def ranking_list():
 
 
 @app.route("/edit_ranking", methods=["POST", "GET"])
-def ranking_edit():
+def edit_ranking():
     """Edit ranking page"""
     items = Ranking.query.all()
     ranking_form = RankingForm(items=items)
     print("validate_on_submit before")
     print(ranking_form.data)
 
+    if ranking_form.data["cancelchange"]:
+        return redirect(url_for("edit_ranking"))
+
     if ranking_form.data["addline"]:
         ranking_form.update_self()
-        print(ranking_form.data)
-        return render_template("edit-ranking.html", ranking_form=ranking_form)
 
     if ranking_form.data["submitform"] and RankingForm().validate_on_submit():
         print("validate_on_submit after")

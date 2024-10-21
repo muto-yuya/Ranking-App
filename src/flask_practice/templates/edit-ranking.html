@@ -5,7 +5,7 @@
 <div class="container mt-4">
     <form id=myform method="post" name="ranking_form">
         {{ ranking_form.csrf_token }}
-        Team Title: {{ ranking_form.title }}<br>
+        ランキング: {{ ranking_form.title }}<br>
         <div>
             <table class="table">
                 <tr>
@@ -31,13 +31,14 @@
                 {% endfor %}
             </table>
         </div>
-
-        <p>{{ wtf.form_field(ranking_form.addline, class="btn-primary") }}</p>
-        <p>{{ wtf.form_field(ranking_form.submitform, class="btn-success") }}</p>
-
-
-
-
+        <div class="container">
+            <div class="row">
+                <div>{{ wtf.form_field(ranking_form.addline, class="btn-primary") }}</div>
+            </div>
+            <div class="row justify-content-end">
+                <div class="col-1">{{ wtf.form_field(ranking_form.cancelchange, class="btn-secondary") }}</div>
+                <div class="col-1">{{ wtf.form_field(ranking_form.submitform, class="btn-success") }}</div>
+            </div>
     </form>
     
 </div>
