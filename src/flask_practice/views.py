@@ -3,7 +3,7 @@
 storing flask views
 """
 
-from flask import redirect, render_template, request, url_for
+from flask import render_template, request, url_for
 from flask_wtf import FlaskForm
 from wtforms import (
     BooleanField,
@@ -25,6 +25,9 @@ STRINGFIELD_RANKING_CATEGORY = "ranking_category"
 STRINGFIELD_ITEM_IMAGE = "item_image"
 BOOLEANFIELD_IS_OPENED = "is_opened"
 BOOLEANFIELD_IS_DELETED = "is_deleted"
+RANKINGFORM_ITEMS = "items"
+RANKINGFORM_ADDLINE = "addline"
+RANKINGFORM_SUBMIT = "submitform"
 
 
 class ItemForm(FlaskForm):
@@ -56,52 +59,16 @@ class RankingForm(FlaskForm):
         read_form_data = self.data
 
         # updated_list to be seen after reloading
-        updated_list = read_form_data["items"]
+        updated_list = read_form_data[RANKINGFORM_ITEMS]
 
         # add row if addline buttton clicked
-        if read_form_data["addline"]:
+        if read_form_data[RANKINGFORM_ADDLINE]:
             updated_list.append({})
 
         # reload the form from the modified data
-        read_form_data["items"] = updated_list
+        read_form_data[RANKINGFORM_ITEMS] = updated_list
         self.__init__(formdata=None, **read_form_data)
         self.validate()
-
-
-@app.route("/")
-def index():
-    """Index page"""
-    return render_template("index.html")
-
-
-@app.route("/test")
-def other1():
-    """TEST page"""
-    return "テストページです！"
-
-
-@app.route("/add_ranking", methods=["GET", "POST"])
-def add_ranking():
-    """Add ranking page for test"""
-    if request.method == "GET":
-        return render_template("add_ranking.html")
-
-    if request.method == "POST":
-        form_item_name = request.form.get(STRINGFIELD_ITEM_NAME)  # str
-        form_place = request.form.get(STRINGFIELD_PLACE)  # str
-        form_ranking_category = request.form.get(
-            STRINGFIELD_RANKING_CATEGORY, default="kurasuhi"
-        )  # str
-        form_item_image = request.form.get(STRINGFIELD_ITEM_IMAGE, default="")  # str
-        ranking = Ranking(
-            item_name=form_item_name,
-            place=form_place,
-            ranking_category=form_ranking_category,
-            item_image=form_item_image,
-        )
-        db.session.add(ranking)
-        db.session.commit()
-        return redirect(url_for("index"))
 
 
 @app.route("/rankings")
@@ -140,16 +107,16 @@ def edit_ranking():
     print("validate_on_submit before")
     print(ranking_form.data)
 
-    if ranking_form.data["addline"]:
+    if ranking_form.data[RANKINGFORM_ADDLINE]:
         ranking_form.update_self()
 
-    if ranking_form.data["submitform"] and RankingForm().validate_on_submit():
+    if ranking_form.data[RANKINGFORM_SUBMIT] and RankingForm().validate_on_submit():
         print("validate_on_submit after")
         # Clear DB
         db.session.query(Ranking).delete()
 
         # update DB with entered values in ranking form
-        for item in ranking_form.data["items"]:
+        for item in ranking_form.data[RANKINGFORM_ITEMS]:
             ranking = Ranking(
                 item_name=item.get(STRINGFIELD_ITEM_NAME),
                 price=item.get(INTEGERFIELD_PPRICE),

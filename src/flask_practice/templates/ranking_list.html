@@ -45,7 +45,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" id="placecConfirmModalClose" class="btn btn-default" data-dismiss="modal">閉じる</button>
-                <button type="button" id="placecConfirmModalShow" class="btn btn-danger">表示</button>
+                <button type="button" id="placecConfirmModalShow" class="btn btn-primary">表示</button>
             </div>
         </div>
     </div>
@@ -61,55 +61,12 @@
                 <label>何位です</label>
             </div>
             <div class="modal-footer">
-                <button type="button" id="placecShowModalClose" class="btn btn-default" data-dismiss="modal">閉じる</button>
+                <button type="button" id="placecShowModalClose" class="btn btn-primary" data-dismiss="modal">閉じる</button>
             </div>
         </div>
     </div>
 </div>
 
-<script>
-    $(function () {
-        var place
-        var item_index
+<script type="text/javascript" src="{{ url_for('static', filename='ranking_list.js') }}"></script>
 
-        $('.show_modal').on('click', function() {
-            item_index = $(this).index()
-            $('#placecConfirmModal').modal('show')
-        });
-
-        $('#placecConfirmModalClose').on('click', function() {
-            $('#placecConfirmModal').modal('hide')
-            item_index = null
-        });
-
-        $('#placecConfirmModalShow').on('click', function() {
-            $('#placecConfirmModal').modal('hide')
-
-            place = $('.item_place_store').eq(item_index).text()
-            $('#placecShowModal').find("#placecShowModalLabel").text(place+"位です")
-            $('#placecShowModal').modal('show')
-
-            $('.show_modal').eq(item_index).addClass("bg-secondary")
-            $('.show_modal').eq(item_index).find("p.item_place").text("順位 "+place+"位")
-
-            item_id_to_open = $('.show_modal').eq(item_index).find("p.item_id").text()
-            $.ajax("/update_is_open_ajax", {
-                type: "post",
-                data: {"item_id_to_open": item_id_to_open},
-            }).done(function(received_data) {
-                console.log("Ajax Success");
-            }).fail(function() {
-                console.log("Ajax Failed");
-            });
-            
-            item_index = null
-        });
-
-        $('#placecShowModalClose').on('click', function() {
-            $('#placecShowModal').modal('hide')
-            place = null
-            item_index = null
-        });
-    });
-</script>
 {% endblock %}

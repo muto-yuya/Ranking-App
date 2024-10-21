@@ -10,12 +10,16 @@ class Ranking(db.Model):
 
     __tablename__ = "ranking"
     id = db.Column(db.Integer, primary_key=True)  # system use
-    item_name = db.Column(db.String(255))  # product name
-    place = db.Column(db.Integer)  # place in the ranking category
-    price = db.Column(db.Integer)
-    ranking_category = db.Column(db.String(255))  # ranking category ex. mcdonalds
-    item_image = db.Column(db.String(2048))  # item image
-    is_opened = db.Column(db.Boolean, default=False, nullable=False)
+    item_name = db.Column(db.String(255))  # 商品名
+    place = db.Column(db.Integer)  # 商品の順位
+    price = db.Column(db.Integer)  # 商品の価格
+    ranking_category = db.Column(
+        db.String(255)
+    )  # ランキング種類　将来複数ランキング追加時に使用
+    item_image = db.Column(db.String(2048))  # 商品の画像
+    is_opened = db.Column(
+        db.Boolean, default=False, nullable=False
+    )  # 順位確認済みフラグ
     created_at = db.Column(
         db.DateTime, nullable=False, default=datetime.now
     )  # 作成日時
