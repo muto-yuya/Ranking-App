@@ -34,21 +34,6 @@
                         <p class="card-text item_price hidden mb-0 text-end">{{ item.price }}円</p>
                     </div>
                 </div>
-                <!-- <div class="row g-0">
-                    <div class="col-4">
-                        <img src="{{ item.item_image }}" class="img-fluid rounded-start" alt="">
-                    </div>
-                    <div class="col-8">
-                        <div class="card-body">
-                        <h6 class="card-title text-start">{{ item.item_name }}</h6>
-                        {% if item.is_opened %}
-                        <p class="card-text item_place mb-0 text-end">順位 {{ item.place }}位</p>
-                        {% else %}
-                        <p class="card-text item_place mb-0 text-end">順位 ?位</p>
-                        {% endif %}
-                        <p class="card-text item_price hidden mb-0 text-end">{{ item.price }}円</p>
-                    </div>
-                </div> -->
             </button>
             {% endfor %}
         </div>
@@ -88,6 +73,12 @@
         </div>
     </div>
 </div>
+
+<style>
+    button {
+      color: #000;
+    }
+</style>
 
 <script type="text/javascript" src="{{ url_for('static', filename='ranking_list.js') }}"></script>
 
