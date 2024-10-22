@@ -16,7 +16,7 @@ $('#placecConfirmModalShow').on('click', function() {
     $('#placecShowModal').modal('show')
 
     $('.show_modal').eq(item_index).addClass("bg-secondary")
-    $('.show_modal').eq(item_index).find("p.item_place").text("順位 "+place+"位")
+    $('.show_modal').eq(item_index).find("p.item_place").text(place+"位")
 
     item_id_to_open = $('.show_modal').eq(item_index).find("p.item_id").text()
     $.ajax("/update_is_open_ajax", {
