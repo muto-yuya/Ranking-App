@@ -3,8 +3,8 @@
 {% block content %}
 <div class="container mt-4">
     <div class="row align-items-center">
-        <div class="col"><h2>帰れま10 くら寿司</h2></div>
-        <div class="col"><button type="button" class="btn-primary float-end" onclick="location.href='{{ ranking_history_url }}';">履歴</button></div>
+        <div class="col-9"><h2>帰れま10 くら寿司</h2></div>
+        <div class="col-3"><button type="button" class="btn-primary float-end" onclick="location.href='{{ ranking_history_url }}';">履歴</button></div>
     </div>
         
         <div class="row row-cols-2">
@@ -18,7 +18,23 @@
                 <p class="item_id" hidden>{{ item.id }}</p>
                 <p class="item_place_store" hidden>{{ item.place }}</p>
 
-                <div class="row g-0">
+                <div class="row">
+                    <h6 class="card-text text-start">{{ item.item_name }}</h6>
+                </div>
+                <div class="row">
+                    <div class="col-6">
+                        <img class="card-img-top" src="{{ item.item_image }}" alt="Card image cap">
+                    </div>
+                    <div class="col-6">
+                        {% if item.is_opened %}
+                        <p class="card-text item_place mb-0 text-end">{{ item.place }}位</p>
+                        {% else %}
+                        <p class="card-text item_place mb-0 text-end">?位</p>
+                        {% endif %}
+                        <p class="card-text item_price hidden mb-0 text-end">{{ item.price }}円</p>
+                    </div>
+                </div>
+                <!-- <div class="row g-0">
                     <div class="col-4">
                         <img src="{{ item.item_image }}" class="img-fluid rounded-start" alt="">
                     </div>
@@ -32,7 +48,7 @@
                         {% endif %}
                         <p class="card-text item_price hidden mb-0 text-end">{{ item.price }}円</p>
                     </div>
-                </div>
+                </div> -->
             </button>
             {% endfor %}
         </div>
