@@ -6,7 +6,7 @@ from pathlib import Path
 import pandas as pd
 
 from flask_practice import app, db, views
-from flask_practice.models.ranking import Ranking
+from flask_practice.models.ranking import Item
 
 
 def import_csv(input):
@@ -16,10 +16,10 @@ def import_csv(input):
         df = pd.read_csv(input_csv, encoding="utf8", sep=",", dtype=str)
 
         # Clear DB
-        db.session.query(Ranking).delete()
+        db.session.query(Item).delete()
 
         for index, row in df.iterrows():
-            ranking = Ranking(
+            ranking = Item(
                 item_name=row[views.STRINGFIELD_ITEM_NAME],
                 price=row[views.INTEGERFIELD_PPRICE],
                 place=row[views.STRINGFIELD_PLACE],

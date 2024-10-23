@@ -16,7 +16,7 @@ from wtforms import (
 from wtforms.validators import InputRequired
 
 from flask_practice import app, db
-from flask_practice.models.ranking import Ranking
+from flask_practice.models.models import Item, ItemCategory
 
 STRINGFIELD_ITEM_NAME = "item_name"
 STRINGFIELD_PLACE = "place"
@@ -71,38 +71,50 @@ class RankingForm(FlaskForm):
         self.validate()
 
 
-@app.route("/rankings")
-def ranking_list():
+@app.route("/rankings/<int:item_category_id>")
+def ranking_list(item_category_id):
     """Show ranking page"""
-    items = Ranking.query.all()
+    item_category = ItemCategory.query.get(item_category_id)
+    items = item_category.items
     print(items)
     print(items[0].is_opened)
     return render_template(
         "ranking_list.html",
+        item_category=item_category,
         items=items,
-        ranking_history_url=url_for(ranking_history.__name__),
+        ranking_history_url=url_for(
+            ranking_history.__name__, item_category_id=item_category.id
+        ),
     )
 
 
-@app.route("/ranking-history")
-def ranking_history():
+@app.route("/ranking-history/<int:item_category_id>")
+def ranking_history(item_category_id):
     """Show ranking history in the game"""
-    items = Ranking.query.all()
-    items = db.session.query(Ranking).filter(Ranking.is_opened).order_by(Ranking.place)
+    item_category = ItemCategory.query.get(item_category_id)
+    items = Item.query.filter(
+        Item.item_category_id == item_category.id, Item.is_opened
+    ).order_by(Item.place)
     print(items)
     return render_template(
         "ranking_history.html",
         items=items,
-        ranking_list_url=url_for(ranking_list.__name__),
+        ranking_list_url=url_for(
+            ranking_list.__name__, item_category_id=item_category.id
+        ),
     )
 
 
-@app.route("/edit_ranking", methods=["POST", "GET"])
-def edit_ranking():
+@app.route("/edit_ranking/<int:item_category_id>", methods=["POST", "GET"])
+def edit_ranking(item_category_id):
     """Edit ranking page"""
-    items = Ranking.query.all()
+    item_category = ItemCategory.query.get(item_category_id)
+    items = Item.query.filter(Item.item_category_id == item_category.id)
     ranking_form = RankingForm(
-        items=items, edit_cancel_url=url_for(edit_ranking.__name__)
+        items=items,
+        edit_cancel_url=url_for(
+            edit_ranking.__name__, item_category_id=item_category.id
+        ),
     )
     print("validate_on_submit before")
     print(ranking_form.data)
@@ -113,15 +125,15 @@ def edit_ranking():
     if ranking_form.data[RANKINGFORM_SUBMIT] and RankingForm().validate_on_submit():
         print("validate_on_submit after")
         # Clear DB
-        db.session.query(Ranking).delete()
+        db.session.query(Item).delete()
 
         # update DB with entered values in ranking form
         for item in ranking_form.data[RANKINGFORM_ITEMS]:
-            ranking = Ranking(
+            ranking = Item(
                 item_name=item.get(STRINGFIELD_ITEM_NAME),
                 price=item.get(INTEGERFIELD_PPRICE),
                 place=item.get(STRINGFIELD_PLACE),
-                ranking_category=item.get(STRINGFIELD_RANKING_CATEGORY),
+                item_category_id=item_category.id,
                 item_image=item.get(STRINGFIELD_ITEM_IMAGE),
                 is_opened=item.get(BOOLEANFIELD_IS_OPENED),
             )
@@ -137,7 +149,7 @@ def update_is_open_ajax():
     if request.method == "POST":
         try:
             item_id_to_open = request.form["item_id_to_open"]
-            item = Ranking.query.get(item_id_to_open)
+            item = Item.query.get(item_id_to_open)
             item.is_opened = True
             db.session.commit()
             message = "update_is_open_ajax completed"

@@ -12,6 +12,5 @@ bootstrap = Bootstrap(app)
 app.config.from_object("config")
 
 db = SQLAlchemy(app)
-from .models import ranking  # noqa: E402, I001
-
+from .models import models  # noqa: E402, I001
 import flask_practice.views  # noqa: E402
