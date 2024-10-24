@@ -21,7 +21,6 @@ from flask_practice.models.models import Item, ItemCategory
 STRINGFIELD_ITEM_NAME = "item_name"
 STRINGFIELD_PLACE = "place"
 INTEGERFIELD_PPRICE = "price"
-STRINGFIELD_RANKING_CATEGORY = "ranking_category"
 STRINGFIELD_ITEM_IMAGE = "item_image"
 BOOLEANFIELD_IS_OPENED = "is_opened"
 BOOLEANFIELD_IS_DELETED = "is_deleted"
@@ -41,7 +40,6 @@ class ItemForm(FlaskForm):
     item_name = StringField(STRINGFIELD_ITEM_NAME, validators=[InputRequired()])
     place = StringField(STRINGFIELD_PLACE, validators=[InputRequired()])
     price = IntegerField(INTEGERFIELD_PPRICE)
-    ranking_category = StringField(STRINGFIELD_RANKING_CATEGORY)
     item_image = StringField(STRINGFIELD_ITEM_IMAGE)
     is_opened = BooleanField(BOOLEANFIELD_IS_OPENED)
 
@@ -71,17 +69,30 @@ class RankingForm(FlaskForm):
         self.validate()
 
 
+@app.route("/rankings")
+def ranking_list():
+    """Show ranking list page"""
+    item_categories = ItemCategory.query.all()
+    print(item_categories)
+    return render_template(
+        "ranking_list.html",
+        item_categories=item_categories,
+        ranking_url=ranking.__name__,
+    )
+
+
 @app.route("/rankings/<int:item_category_id>")
-def ranking_list(item_category_id):
+def ranking(item_category_id):
     """Show ranking page"""
     item_category = ItemCategory.query.get(item_category_id)
     items = item_category.items
+    print(item_category.item_category_name)
     print(items)
-    print(items[0].is_opened)
     return render_template(
-        "ranking_list.html",
+        "ranking.html",
         item_category=item_category,
         items=items,
+        ranking_list_url=url_for(ranking_list.__name__),
         ranking_history_url=url_for(
             ranking_history.__name__, item_category_id=item_category.id
         ),
@@ -95,13 +106,10 @@ def ranking_history(item_category_id):
     items = Item.query.filter(
         Item.item_category_id == item_category.id, Item.is_opened
     ).order_by(Item.place)
-    print(items)
     return render_template(
         "ranking_history.html",
         items=items,
-        ranking_list_url=url_for(
-            ranking_list.__name__, item_category_id=item_category.id
-        ),
+        ranking_url=url_for(ranking.__name__, item_category_id=item_category.id),
     )
 
 
@@ -125,7 +133,7 @@ def edit_ranking(item_category_id):
     if ranking_form.data[RANKINGFORM_SUBMIT] and RankingForm().validate_on_submit():
         print("validate_on_submit after")
         # Clear DB
-        db.session.query(Item).delete()
+        Item.query.filter(Item.item_category_id == item_category.id).delete()
 
         # update DB with entered values in ranking form
         for item in ranking_form.data[RANKINGFORM_ITEMS]:

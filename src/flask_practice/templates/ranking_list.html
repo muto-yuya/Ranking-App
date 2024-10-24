@@ -2,84 +2,20 @@
 
 {% block content %}
 <div class="container mt-4">
-    <div class="row align-items-center">
-        <div class="col-9"><h2>{{ item_category.item_category_name }}</h2></div>
-        <div class="col-3"><button type="button" class="btn-primary float-end" onclick="location.href='{{ ranking_history_url }}';">履歴</button></div>
-    </div>
-        
-        <div class="row row-cols-2">
-
-            {% for item in items %}
-            {% if item.is_opened %}
-            <button class="col show_modal card mb-3 mr-1 bg-secondary">
-            {% else %}
-            <button class="col show_modal card mb-3 mr-1">
-            {% endif %}
-                <p class="item_id" hidden>{{ item.id }}</p>
-                <p class="item_place_store" hidden>{{ item.place }}</p>
-
-                <div class="row">
-                    <h6 class="card-text text-start">{{ item.item_name }}</h6>
-                </div>
-                <div class="row">
-                    <div class="col-6">
-                        <img class="card-img-top" src="{{ item.item_image }}" alt="Card image cap">
-                    </div>
-                    <div class="col-6">
-                        {% if item.is_opened %}
-                        <p class="card-text item_place mb-0 text-end">{{ item.place }}位</p>
-                        {% else %}
-                        <p class="card-text item_place mb-0 text-end">?位</p>
-                        {% endif %}
-                        <p class="card-text item_price hidden mb-0 text-end">{{ item.price }}円</p>
-                    </div>
-                </div>
-            </button>
-            {% endfor %}
-        </div>
-    </div>
+    <table class="table">
+        <tr>
+            <th class="col" scope="col"> ランキング名 </th>
+        </tr>
+        {% for item_category in item_categories %}
+        <tr>
+            <td scope="row">
+                <button class="col card", onclick="location.href='{{ url_for(ranking_url, item_category_id=item_category.id) }}'">
+                    {{ item_category.item_category_name }}
+                </button>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
 </div>
-
-<!-- ボタン・リンククリック後に表示される画面の内容 -->
-<div class="modal fade" id="placecConfirmModal" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4>順位表示確認</h4>
-            </div>
-            <div class="modal-body">
-                <label>順位を表示しますか？</label>
-            </div>
-            <div class="modal-footer">
-                <button type="button" id="placecConfirmModalClose" class="btn btn-default" data-dismiss="modal">閉じる</button>
-                <button type="button" id="placecConfirmModalShow" class="btn btn-primary">表示</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="modal fade" id="placecShowModal" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4>順位表示</h4>
-            </div>
-            <div class="modal-body" id="placecShowModalLabel">
-                <label>何位です</label>
-            </div>
-            <div class="modal-footer">
-                <button type="button" id="placecShowModalClose" class="btn btn-primary" data-dismiss="modal">閉じる</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<style>
-    button {
-      color: #000;
-    }
-</style>
-
-<script type="text/javascript" src="{{ url_for('static', filename='ranking_list.js') }}"></script>
 
 {% endblock %}

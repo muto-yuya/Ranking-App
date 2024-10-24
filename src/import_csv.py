@@ -6,7 +6,7 @@ from pathlib import Path
 import pandas as pd
 
 from flask_practice import app, db, views
-from flask_practice.models.ranking import Item
+from flask_practice.models.models import Item, ItemCategory
 
 
 def import_csv(input):
@@ -23,6 +23,7 @@ def import_csv(input):
                 item_name=row[views.STRINGFIELD_ITEM_NAME],
                 price=row[views.INTEGERFIELD_PPRICE],
                 place=row[views.STRINGFIELD_PLACE],
+                item_category_id="item_category_id",
                 item_image=row[views.STRINGFIELD_ITEM_IMAGE],
             )
             db.session.add(ranking)
