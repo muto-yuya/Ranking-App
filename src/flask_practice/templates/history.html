@@ -4,7 +4,7 @@
 <div class="container mt-4">
     <div class="row align-items-center">
         <div class="col">
-            <button type="button" class="btn-second float-end" onclick="location.href='{{ ranking_url }}';">戻る</button>
+            <button type="button" class="btn-second float-end" onclick="location.href='{{ game_url }}';">戻る</button>
         </div>
     </div>
     
@@ -15,12 +15,12 @@
                 <th class="col-3" scope="col"> 商品名 </th>
                 <th class="col-1" scope="col"> 価格 </th>
             </tr>
-            {% for item in items %}
+            {% for game_item in game_items %}
             <tr>
-                <td scope="row">{{ item.place }}</td>
-                <td scope="row"><img class="item_image img-thumbnail" src="{{ item.item_image }}" alt="" border=3 height=50 width=50></img></td>
-                <td scope="row">{{ item.item_name }}</td>
-                <td scope="row">{{ item.price }}</td>
+                <td scope="row">{{ game_item.item.place }}</td>
+                <td scope="row"><img class="item_image img-thumbnail" src="{{ game_item.item.item_image }}" alt="" border=3 height=50 width=50></img></td>
+                <td scope="row">{{ game_item.item.item_name }}</td>
+                <td scope="row">{{ game_item.item.price }}</td>
             </tr>
             {% endfor %}
         </table>

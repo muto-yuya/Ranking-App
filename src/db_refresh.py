@@ -20,7 +20,6 @@ if __name__ == "__main__":
             place="5",
             item_category_id=item_category1.id,
             item_image="https://www.kurasushi.co.jp/menu/upload/bf4c8baeb6e3f4cefe7a076204ae6a663f4ea93f.jpg",
-            is_opened=False,
         )
 
         item2 = Item(
@@ -29,7 +28,6 @@ if __name__ == "__main__":
             place="10",
             item_category_id=item_category1.id,
             item_image="https://www.kurasushi.co.jp/menu/upload/730f88c0bd3972e0cf978fb4f3ebcd23bcf2c921.jpg",
-            is_opened=False,
         )
 
         item3 = Item(
@@ -38,7 +36,6 @@ if __name__ == "__main__":
             place="圏外",
             item_category_id=item_category2.id,
             item_image="https://www.mcdonalds.co.jp/product_images/11/1360-Double-Cheese-Burger.m.webp?20240902092837",
-            is_opened=False,
         )
         db.session.add(item1)
         db.session.add(item2)

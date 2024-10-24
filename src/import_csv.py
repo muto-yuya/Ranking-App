@@ -6,7 +6,7 @@ from pathlib import Path
 import pandas as pd
 
 from flask_practice import app, db, views
-from flask_practice.models.models import Item, ItemCategory
+from flask_practice.models.models import Item
 
 
 def import_csv(input):

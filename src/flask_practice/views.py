@@ -3,7 +3,7 @@
 storing flask views
 """
 
-from flask import render_template, request, url_for
+from flask import redirect, render_template, request, url_for
 from flask_wtf import FlaskForm
 from wtforms import (
     BooleanField,
@@ -16,7 +16,7 @@ from wtforms import (
 from wtforms.validators import InputRequired
 
 from flask_practice import app, db
-from flask_practice.models.models import Item, ItemCategory
+from flask_practice.models.models import Game, GameItem, Item, ItemCategory
 
 STRINGFIELD_ITEM_NAME = "item_name"
 STRINGFIELD_PLACE = "place"
@@ -44,7 +44,7 @@ class ItemForm(FlaskForm):
     is_opened = BooleanField(BOOLEANFIELD_IS_OPENED)
 
 
-class RankingForm(FlaskForm):
+class ItemEditForm(FlaskForm):
     """ranking list form for edit"""
 
     items = FieldList(FormField(ItemForm, "Item"))
@@ -69,47 +69,64 @@ class RankingForm(FlaskForm):
         self.validate()
 
 
-@app.route("/rankings")
-def ranking_list():
+@app.route("/")
+def category_list():
     """Show ranking list page"""
     item_categories = ItemCategory.query.all()
-    print(item_categories)
     return render_template(
-        "ranking_list.html",
+        "category_list.html",
         item_categories=item_categories,
-        ranking_url=ranking.__name__,
+        game_create_url="game_create",
     )
 
 
-@app.route("/rankings/<int:item_category_id>")
-def ranking(item_category_id):
-    """Show ranking page"""
+@app.route("/game_create/<int:item_category_id>")
+def game_create(item_category_id):
+    # Game作成
     item_category = ItemCategory.query.get(item_category_id)
-    items = item_category.items
-    print(item_category.item_category_name)
-    print(items)
+    game = Game(item_category_id=item_category.id)
+    db.session.add(game)
+    db.session.commit()
+
+    # GameItem作成
+    items = Item.query.filter(Item.item_category_id == game.item_category_id)
+    for item in items:
+        game_item = GameItem(
+            game_id=game.id,
+            item_id=item.id,
+            is_opened=False,
+        )
+        db.session.add(game_item)
+    db.session.commit()
+    return redirect(url_for(game_show.__name__, game_id=game.id))
+
+
+@app.route("/games/<int:game_id>")
+def game_show(game_id):
+    """Show items in the game"""
+    game = Game.query.get(game_id)
+    game_items = game.game_items
+
     return render_template(
-        "ranking.html",
-        item_category=item_category,
-        items=items,
-        ranking_list_url=url_for(ranking_list.__name__),
-        ranking_history_url=url_for(
-            ranking_history.__name__, item_category_id=item_category.id
-        ),
+        "game.html",
+        item_category=game.item_category,
+        game_items=game_items,
+        category_list_url=url_for(category_list.__name__),
+        game_history_url=url_for(game_history.__name__, game_id=game.id),
     )
 
 
-@app.route("/ranking-history/<int:item_category_id>")
-def ranking_history(item_category_id):
+@app.route("/games/game_history/<int:game_id>")
+def game_history(game_id):
     """Show ranking history in the game"""
-    item_category = ItemCategory.query.get(item_category_id)
-    items = Item.query.filter(
-        Item.item_category_id == item_category.id, Item.is_opened
-    ).order_by(Item.place)
+    game = Game.query.get(game_id)
+    opened_game_items = [
+        game_item for game_item in game.game_items if game_item.is_opened
+    ]
     return render_template(
-        "ranking_history.html",
-        items=items,
-        ranking_url=url_for(ranking.__name__, item_category_id=item_category.id),
+        "history.html",
+        game_items=opened_game_items,
+        game_url=url_for(game_show.__name__, game_id=game.id),
     )
 
 
@@ -118,7 +135,7 @@ def edit_ranking(item_category_id):
     """Edit ranking page"""
     item_category = ItemCategory.query.get(item_category_id)
     items = Item.query.filter(Item.item_category_id == item_category.id)
-    ranking_form = RankingForm(
+    ranking_form = ItemEditForm(
         items=items,
         edit_cancel_url=url_for(
             edit_ranking.__name__, item_category_id=item_category.id
@@ -130,7 +147,7 @@ def edit_ranking(item_category_id):
     if ranking_form.data[RANKINGFORM_ADDLINE]:
         ranking_form.update_self()
 
-    if ranking_form.data[RANKINGFORM_SUBMIT] and RankingForm().validate_on_submit():
+    if ranking_form.data[RANKINGFORM_SUBMIT] and ItemEditForm().validate_on_submit():
         print("validate_on_submit after")
         # Clear DB
         Item.query.filter(Item.item_category_id == item_category.id).delete()
@@ -153,12 +170,13 @@ def edit_ranking(item_category_id):
 @app.route("/update_is_open_ajax", methods=["POST"])
 def update_is_open_ajax():
     """Update is open status through Ajax"""
+    print(request.form)
     message = ""
     if request.method == "POST":
         try:
-            item_id_to_open = request.form["item_id_to_open"]
-            item = Item.query.get(item_id_to_open)
-            item.is_opened = True
+            game_item_id_to_open = request.form["item_id_to_open"]
+            game_item = GameItem.query.get(game_item_id_to_open)
+            game_item.is_opened = True
             db.session.commit()
             message = "update_is_open_ajax completed"
         except Exception as e:

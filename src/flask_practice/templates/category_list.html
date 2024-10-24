@@ -9,7 +9,7 @@
         {% for item_category in item_categories %}
         <tr>
             <td scope="row">
-                <button class="col card", onclick="location.href='{{ url_for(ranking_url, item_category_id=item_category.id) }}'">
+                <button class="col card", onclick="location.href='{{ url_for(game_create_url, item_category_id=item_category.id) }}'">
                     {{ item_category.item_category_name }}
                 </button>
             </td>

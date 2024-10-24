@@ -8,35 +8,35 @@
 
     <div class="row">
         <div class="col">
-            <button type="button" class="btn-primary float-end" onclick="location.href='{{ ranking_history_url }}';">履歴</button>
-            <button type="button" class="btn-second float-end" onclick="location.href='{{ ranking_list_url }}';">戻る</button>
+            <button type="button" class="btn-primary float-end" onclick="location.href='{{ game_history_url }}';">履歴</button>
+            <button type="button" class="btn-second float-end" onclick="location.href='{{ category_list_url }}';">戻る</button>
         </div>
     </div>
         
     <div class="row row-cols-2">
-        {% for item in items %}
-        {% if item.is_opened %}
+        {% for game_item in game_items %}
+        {% if game_item.is_opened %}
         <button class="col show_modal card mb-3 mr-1 bg-secondary">
         {% else %}
         <button class="col show_modal card mb-3 mr-1">
         {% endif %}
-            <p class="item_id" hidden>{{ item.id }}</p>
-            <p class="item_place_store" hidden>{{ item.place }}</p>
+            <p class="item_id" hidden>{{ game_item.id }}</p>
+            <p class="item_place_store" hidden>{{ game_item.item.place }}</p>
 
             <div class="row">
-                <h6 class="card-text text-start">{{ item.item_name }}</h6>
+                <h6 class="card-text text-start">{{ game_item.item.item_name }}</h6>
             </div>
             <div class="row">
                 <div class="col-6">
-                    <img class="card-img-top" src="{{ item.item_image }}" alt="Card image cap">
+                    <img class="card-img-top" src="{{ game_item.item.item_image }}" alt="Card image cap">
                 </div>
                 <div class="col-6">
-                    {% if item.is_opened %}
-                    <p class="card-text item_place mb-0 text-end">{{ item.place }}位</p>
+                    {% if game_item.is_opened %}
+                    <p class="card-text item_place mb-0 text-end">{{ game_item.item.place }}位</p>
                     {% else %}
                     <p class="card-text item_place mb-0 text-end">?位</p>
                     {% endif %}
-                    <p class="card-text item_price hidden mb-0 text-end">{{ item.price }}円</p>
+                    <p class="card-text item_price hidden mb-0 text-end">{{ game_item.item.price }}円</p>
                 </div>
             </div>
         </button>
@@ -84,6 +84,6 @@
     }
 </style>
 
-<script type="text/javascript" src="{{ url_for('static', filename='ranking_list.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='game.js') }}"></script>
 
 {% endblock %}

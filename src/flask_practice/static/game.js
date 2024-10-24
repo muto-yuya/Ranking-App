@@ -18,10 +18,10 @@ $('#placecConfirmModalShow').on('click', function() {
     $('.show_modal').eq(item_index).addClass("bg-secondary")
     $('.show_modal').eq(item_index).find("p.item_place").text(place+"位")
 
-    item_id_to_open = $('.show_modal').eq(item_index).find("p.item_id").text()
+    game_item_id_to_open = $('.show_modal').eq(item_index).find("p.item_id").text()
     $.ajax("/update_is_open_ajax", {
         type: "post",
-        data: {"item_id_to_open": item_id_to_open},
+        data: {"item_id_to_open": game_item_id_to_open},
     }).done(function(received_data) {
         console.log("Ajax Success");
     }).fail(function() {
