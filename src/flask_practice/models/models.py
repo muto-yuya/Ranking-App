@@ -17,6 +17,7 @@ class Item(db.Model):
         db.Integer, db.ForeignKey("ItemCategory.id"), nullable=False
     )  # アイテムカテゴリのID
     item_image = db.Column(db.String(2048), nullable=True)  # 商品の画像
+    is_deleted = db.Column(db.Boolean, default=False, nullable=False)  # 削除済みフラグ
     created_at = db.Column(
         db.DateTime, nullable=False, default=datetime.now
     )  # 作成日時
