@@ -36,3 +36,19 @@ $('#placecShowModalClose').on('click', function() {
     place = null
     item_index = null
 });
+
+$('#gameShare').on('click', function() {
+    $('#gameShareModal').modal('show')
+    $('#URLtoShare').text("URL: "+location.href)
+    $('#QR').children().remove()
+    var qrcode = new QRCode('QR', {
+        text:  location.href,
+        width: 128,
+        height: 128,
+        correctLevel : QRCode.CorrectLevel.H
+      });  
+});
+
+$('#gameShareModalClose').on('click', function() {
+    $('#gameShareModal').modal('hide')
+});

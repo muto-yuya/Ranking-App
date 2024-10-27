@@ -9,6 +9,7 @@
     <div class="row">
         <div class="col">
             <button type="button" class="btn-primary float-end" onclick="location.href='{{ game_history_url }}';">履歴</button>
+            <button type="button" class="btn-second float-end" id="gameShare">共有</button>
             <button type="button" class="btn-second float-end" onclick="location.href='{{ category_list_url }}';">戻る</button>
         </div>
     </div>
@@ -78,12 +79,31 @@
     </div>
 </div>
 
+<div class="modal fade" id="gameShareModal" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4>共有用のURL・QRコード</h4>
+            </div>
+            <div class="modal-body">
+                <label>このURLまたhQRコードを他のプレイヤーに共有してください</label>
+                <p id="URLtoShare"></p>
+                <div id="QR"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="gameShareModalClose" class="btn btn-default" data-dismiss="modal">閉じる</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <style>
     button {
       color: #000;
     }
 </style>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" integrity="sha512-CNgIRecGo7nphbeZ04Sc13ka07paqdeTu0WR1IM4kNcpmBAUSHSQX0FslNhTDadL4O5SAGapGt4FodqL8My0mA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>  
 <script type="text/javascript" src="{{ url_for('static', filename='game.js') }}"></script>
 
 {% endblock %}
