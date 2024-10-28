@@ -28,6 +28,7 @@ BOOLEANFIELD_IS_DELETED = "is_deleted"
 RANKINGFORM_ITEMS = "items"
 RANKINGFORM_ADDLINE = "addline"
 RANKINGFORM_SUBMIT = "submitform"
+STRINGFIELD_ITEM_CATEGORY_NAME = "item_category_name"
 
 
 class ItemForm(FlaskForm):
