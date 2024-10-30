@@ -39,6 +39,7 @@ curl -sSf https://rye.astral.sh/get | bash
 ```bash
 cd ./flask_practice
 rye init
+rye sync
 ```
 
 # Usage
